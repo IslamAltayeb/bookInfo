@@ -1,9 +1,4 @@
 'use strict';
-
-//`https://www.googleapis.com/books/v1/volumes?q=${bookName}&
-//&apikey=${key}`
-//AIzaSyCzK4xsLEdS-bbCshmI_kdo9AFcgnm1-1Y
-
 const search = document.getElementById('search')
 const searchBtn = document.getElementById('submit')
 const output = document.getElementById('output')
@@ -14,7 +9,7 @@ let getBook = () => {
     const url = `https://www.googleapis.com/books/v1/volumes?q=${bookName}
   &apikey=${key}`;
 
-  if (bookName.trim().length <= 0) {    
+  if (bookName.length <= 0) {    
     output.innerHTML = ` `
   }else{
     fetch(url).then(res => res.json())
@@ -36,7 +31,7 @@ function displayData(data) {
 
     data.items.forEach((book) => {
         const cover = book.volumeInfo.imageLinks?.thumbnail || "";
-        const { title, authors, publisher, publishedDate, description, language, pageCount } = book.volumeInfo;
+        const { title, authors, publisher, publishedDate, description, language, pageCount, previewLink } = book.volumeInfo;
 
         const bookInfo = document.createElement('div');
         bookInfo.classList.add('book-info');
@@ -48,7 +43,8 @@ function displayData(data) {
                 <p><strong>Published Date:</strong> ${publishedDate ? publishedDate : 'Unknown'}</p>
                 <p><strong>Language:</strong> ${language ? language : 'No language available'}</p>
                 <p><strong>Page Count:</strong> ${pageCount ? pageCount : 'No pageCount available'}</p>
-                <p><strong>Description:</strong> ${description ? description : 'No description available'}</p>
+                <p><strong>Description:</strong> ${description ? description.slice(0, 120) : 'No description available'}</p>
+                <strong><a href="${previewLink ? previewLink : 'No previewLink available'}" target="_blank">Read Now</a> </strong>
             </div>
             <img class="book-cover" src="${cover ? cover : 'No image available'}">
         `;
